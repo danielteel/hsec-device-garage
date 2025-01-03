@@ -39,12 +39,13 @@ void packetReceived(uint8_t* data, uint32_t dataLength){
             digitalWrite(garageOpenerPin, HIGH);
             delay(250);
             digitalWrite(garageOpenerPin, LOW);
-        break;
+            break;
     }
 }
 
 void onConnected(){
     Serial.println("NetClient Connected");
+    NetClient.sendString("i=Operate:void:1");
 }
 
 void onDisconnected(){
@@ -58,8 +59,8 @@ void setup(){
 
 
     //Setup time
-    configTime(0, 0, ntpServer1, ntpServer2, ntpServer3);  // 0, 0 because we will use TZ in the next line
-    setenv("TZ", timeZone, 1);            // Set environment variable with your time zone
+    configTime(0, 0, ntpServer1, ntpServer2, ntpServer3);
+    setenv("TZ", timeZone, 1);
     tzset();
 
     //Setup non volatile storage
@@ -92,7 +93,6 @@ void loop(){
 
     static uint32_t lastCameraTime=0;
     static uint32_t lastReadyTime=0;
-
 
     uint32_t currentTime = millis();
 
