@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.tcc": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "sntp.h": "c",
+        "limits": "cpp",
+        "numeric": "cpp",
+        "streambuf": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp"
+    }
+}

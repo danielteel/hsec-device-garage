@@ -1,0 +1,8 @@
+Dont forget to make your secrets.h in this folder, heres a shell of what it should look like
+#pragma once
+#define SECRET_WIFI_SSID ""
+#define SECRET_WIFI_PASS ""
+#define SECRET_ENCROKEY ""
+#define SECRET_DEVICE_NAME ""
+#define SECRET_HOST_ADDRESS ""
+#define SECRET_HOST_PORT 4000
