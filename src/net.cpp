@@ -33,6 +33,7 @@ void Net::errorOccured(String errorText){
 
     Serial.print("Net error occurred: ");
     Serial.println(errorText);
+    if (onDisconnected) onDisconnected();
 }
 
 void Net::attemptToConnect(){
@@ -88,12 +89,19 @@ bool Net::sendPacket(uint8_t* data, uint32_t dataLength){
     uint32_t encryptedLength;
     uint8_t* encrypted=encrypt(this->clientsHandshake, data, dataLength, encryptedLength, this->encroKey);
     if (encrypted){
+        bool didntFail=true;
         this->clientsHandshake++;
-        this->Client.write((uint8_t*)&encryptedLength, 4);
-        this->Client.write(encrypted, encryptedLength);
+        if (this->Client.write((uint8_t*)&encryptedLength, 4)!=4){
+            errorOccured("sendPacket failed to send all the bytes");
+            didntFail=false;
+        };
+        if (this->Client.write(encrypted, encryptedLength)!=encryptedLength){
+            errorOccured("sendPacket failed to send all the bytes");
+            didntFail=false;
+        };
         free(encrypted);
         encrypted=nullptr;
-        return true;
+        return didntFail;
     }
     return false;
 }

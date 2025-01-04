@@ -24,7 +24,7 @@ void initConfig(camera_config_t& c){
     c.pin_pwdn = PWDN_GPIO_NUM;
     c.pin_reset = RESET_GPIO_NUM;
     c.xclk_freq_hz = 16500000;
-    c.frame_size = FRAMESIZE_HVGA;//FRAMESIZE_VGA;
+    c.frame_size = FRAMESIZE_HVGA;
     c.pixel_format = PIXFORMAT_JPEG; // for streaming
     c.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
     c.fb_location = CAMERA_FB_IN_PSRAM;
