@@ -20,7 +20,7 @@ DHTesp dht;
 const char *WiFiSSID = SECRET_WIFI_SSID;
 const char *WiFiPass = SECRET_WIFI_PASS;
 
-const uint32_t sendPeriod = 1000;//How often a thing should be sent, and then the state machine advanced
+const uint32_t sendPeriod = 1500;//How often a thing should be sent, and then the state machine advanced
 const uint32_t howLongBeforeRestartIfNotConnecting = 300000;//restart esp32 if havent been able to connect to server for 5 minutes
 
 
