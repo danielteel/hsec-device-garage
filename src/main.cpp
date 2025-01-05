@@ -36,20 +36,31 @@ Net NetClient(SECRET_DEVICE_NAME, SECRET_ENCROKEY, SECRET_HOST_ADDRESS, SECRET_H
 
 
 void packetReceived(uint8_t* data, uint32_t dataLength){
-    Serial.print("NetClient recieved:");
-    Serial.println(String(data, dataLength));
+    sensor_t * s;
     switch (data[0]){
         case 1:
             digitalWrite(garageOpenerPin, HIGH);
             delay(250);
             digitalWrite(garageOpenerPin, LOW);
             break;
+        case 2:
+            s = esp_camera_sensor_get();
+            if (s) s->set_quality(s, data[1]);
+            storageData.quality=data[1];
+            commitStorage(storageData);
+            break;
+        case 3:
+            s = esp_camera_sensor_get();
+            if (s) s->set_framesize(s, (framesize_t)data[1]);
+            storageData.frame_size=(framesize_t)data[1];
+            commitStorage(storageData);
+            break;
     }
 }
 
 void onConnected(){
     Serial.println("NetClient Connected");
-    NetClient.sendString("i=Operate:void:1");
+    NetClient.sendString("i=Operate:void:1,Qual(8best-63worst):byte:2,FrameSize(3|5|7):byte:3");
 }
 
 void onDisconnected(){
@@ -88,9 +99,6 @@ void setup(){
     Serial.begin(115200);
     Serial.println("Initializing...");
 
-    //Setup camera
-    cameraSetup();
-
     //Setup DHT11
     dht.setup(dht11Pin, DHTesp::DHT22);
 
@@ -101,7 +109,16 @@ void setup(){
 
     //Setup non volatile storage
     StorageData defaultStorage;
+    defaultStorage.frame_size=FRAMESIZE_HVGA;
+    defaultStorage.quality=16;
     initStorage(&defaultStorage, storageData);
+    Serial.print("Framesize:");
+    Serial.println(storageData.frame_size);
+    Serial.print("Quality:");
+    Serial.println(storageData.quality);
+    
+    //Setup camera
+    cameraSetup(storageData.frame_size, storageData.quality);
 
     //Setup IO
     pinMode(garageOpenerPin, OUTPUT);
@@ -172,6 +189,7 @@ void loop(){
                             Serial.println("failed to capture ");
                         }
                         break;
+                        
                     case 1:
                         float humidity = dht.getHumidity();
                         float temperature = dht.getTemperature();

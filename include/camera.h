@@ -24,6 +24,6 @@ typedef struct CAMERA_CAPTURE {
     camera_fb_t* fb;
 } CAMERA_CAPTURE;
 
-void cameraSetup();
+void cameraSetup(framesize_t framesize, int quality);
 bool cameraCapture(CAMERA_CAPTURE& cap);
 void cameraCaptureCleanup(CAMERA_CAPTURE& cap);
